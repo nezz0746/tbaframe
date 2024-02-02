@@ -99,7 +99,6 @@ export const GET = async (req: NextRequest) => {
           width: "100%",
           height: "100%",
           backgroundColor: "white",
-          border: "green 1px solid",
         }}
       >
         <div
