@@ -27,7 +27,7 @@ async function getResponse(
     getFrameHtmlResponse({
       buttons: [
         {
-          label: `We love BOAT`,
+          label: `Reload`,
         },
       ],
       image,
