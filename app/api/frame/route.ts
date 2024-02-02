@@ -44,7 +44,7 @@ export async function POST(req: NextRequest): Promise<Response> {
 
     return getResponse(
       req,
-      `${appURL}/api/image/content?tokenContract=${tokenContract}&tokenId=${tokenId}&chainId=${chainId}&version=${version}`
+      `${appURL}/api/image/content?tokenContract=${tokenContract}&tokenId=${tokenId}&chainId=${chainId}&version=${version}&timestamp=${Date.now()}`
     );
   }
 }
