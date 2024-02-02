@@ -22,9 +22,9 @@ export const GET = async (req: NextRequest) => {
 
   const params = { tokenContract, tokenId, chainId };
 
-  const { image } = await getTokenImage(params);
+  const { image, name } = await getTokenImage(params);
 
-  const imageSize = 0.8 * height;
+  const imageSize = 0.7 * height;
 
   return new ImageResponse(
     (
@@ -35,10 +35,29 @@ export const GET = async (req: NextRequest) => {
           justifyContent: "center",
           alignItems: "center",
           width: "100%",
+          backgroundColor: "white",
           height: "100%",
         }}
       >
-        <img src={image} style={{ width: imageSize, height: imageSize }} />
+        <div
+          style={{
+            display: "flex",
+            position: "absolute",
+            top: 0,
+            width: "100%",
+            height: "50%",
+            backgroundColor: "black",
+          }}
+        ></div>
+        <p style={{ fontSize: 50, color: "white" }}>{name}</p>
+        <img
+          src={image}
+          style={{
+            width: imageSize,
+            height: imageSize,
+            boxShadow: "0 0 30px 0 rgba(0, 0, 0, 0.4)",
+          }}
+        />
       </div>
     ),
     {
