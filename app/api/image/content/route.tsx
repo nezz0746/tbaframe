@@ -49,7 +49,8 @@ export const GET = async (req: NextRequest) => {
     (contentWidth -
       (images_per_row - 1) * image_grid_gap -
       header_content_gap) /
-    images_per_row;
+      images_per_row -
+    10;
 
   const nft_images = content
     .map((nft) => {
@@ -96,54 +97,82 @@ export const GET = async (req: NextRequest) => {
         style={{
           display: "flex",
           flexDirection: "row",
+          gap: header_content_gap,
           width: "100%",
           height: "100%",
-          padding,
-          gap: header_content_gap,
         }}
       >
         <div
           style={{
             display: "flex",
-            width: headerWidth,
-            flexDirection: "column",
-            position: "relative",
+            position: "absolute",
+            top: 0,
+            width: "100%",
+            height: "50%",
+            backgroundColor: "black",
           }}
-        >
-          <img src={image} style={{ width: "100%", aspectRatio: 1 }} />
-          <p style={{ fontSize: 50, fontWeight: "bold" }}>{name}</p>
-        </div>
+        ></div>
         <div
           style={{
+            padding,
             display: "flex",
             flexDirection: "row",
-            flexWrap: "wrap",
-            flexGrow: 1,
-            justifyContent: "flex-start",
-            alignItems: "flex-start",
-            width: contentWidth,
-            gap: image_grid_gap,
+            gap: header_content_gap,
           }}
         >
-          {nft_images_filtered.map(({ image, tokenId, contract }) => {
-            const key = tokenId + "_" + contract;
-            return (
-              <div
-                style={{
-                  display: "flex",
-                }}
-                key={key}
-              >
-                <img
-                  src={image}
+          <div
+            style={{
+              display: "flex",
+              width: headerWidth,
+              flexDirection: "column",
+              position: "relative",
+            }}
+          >
+            <img
+              src={image}
+              style={{
+                width: "100%",
+                aspectRatio: 1,
+                boxShadow: "0 0 30px 0 rgba(0, 0, 0, 0.4)",
+              }}
+            />
+            <p style={{ fontSize: 50, fontWeight: "bold" }}>{name}</p>
+          </div>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              flexWrap: "wrap",
+              flexGrow: 1,
+              justifyContent: "center",
+              alignItems: "center",
+              padding: 10,
+              width: contentWidth,
+              gap: image_grid_gap,
+              backgroundColor: "white",
+              boxShadow: "0 0 30px 0 rgba(0, 0, 0, 0.4)",
+            }}
+          >
+            {nft_images_filtered.map(({ image, tokenId, contract }) => {
+              const key = tokenId + "_" + contract;
+              return (
+                <div
                   style={{
-                    width: imageWidth,
-                    aspectRatio: 1,
+                    display: "flex",
                   }}
-                />
-              </div>
-            );
-          })}
+                  key={key}
+                >
+                  <img
+                    src={image}
+                    style={{
+                      width: imageWidth,
+                      aspectRatio: 1,
+                    }}
+                  />
+                </div>
+              );
+            })}
+          </div>
         </div>
       </div>
     ),
