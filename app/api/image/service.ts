@@ -43,6 +43,7 @@ export const getTBAContent = async (params: TokenParams, v2?: boolean) => {
 
   const content = await getTBANfts(account, params.chainId);
 
-  console.log(content.ownedNfts);
+  console.log(content.ownedNfts.map((nft) => [nft.name, nft.image]));
+
   return content.ownedNfts;
 };

@@ -42,6 +42,17 @@ export const GET = async (req: NextRequest) => {
       header_content_gap) /
     images_per_row;
 
+  const nft_images = content
+    .map((nft) => {
+      const imageURL = nft.image.thumbnailUrl ?? nft.image.originalUrl;
+      return {
+        tokenId: nft.tokenId,
+        contract: nft.contract.address,
+        image: imageURL,
+      };
+    })
+    .filter((nft) => nft.image);
+
   return new ImageResponse(
     (
       <div
@@ -69,16 +80,17 @@ export const GET = async (req: NextRequest) => {
             gap: image_grid_gap,
           }}
         >
-          {content.map((nft) => {
+          {nft_images.map(({ image, tokenId, contract }) => {
+            const key = tokenId + "_" + contract;
             return (
               <div
                 style={{
                   display: "flex",
                 }}
-                key={nft.tokenId + " " + nft.contract.address}
+                key={key}
               >
                 <img
-                  src={nft.image.thumbnailUrl}
+                  src={image}
                   style={{ width: imageWidth, aspectRatio: 1 }}
                 />
               </div>
