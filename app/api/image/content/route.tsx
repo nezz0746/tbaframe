@@ -129,6 +129,8 @@ export const GET = async (req: NextRequest) => {
           >
             <img
               src={image}
+              width={headerWidth}
+              height={headerWidth}
               style={{
                 width: "100%",
                 aspectRatio: 1,
@@ -164,6 +166,8 @@ export const GET = async (req: NextRequest) => {
                 >
                   <img
                     src={image}
+                    width={imageWidth}
+                    height={imageWidth}
                     style={{
                       width: imageWidth,
                       aspectRatio: 1,
