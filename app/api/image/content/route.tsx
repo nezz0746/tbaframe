@@ -2,7 +2,16 @@ import { NextRequest } from "next/server";
 import { ImageResponse } from "@vercel/og";
 import { getTBAContent, getTokenImage } from "../service";
 import { dimensions } from "@/config";
+import https from "https";
 import { WronParams } from "../components";
+
+const testFallbackImage = "https://placehold.co/200x200";
+
+type FrameNFT = {
+  image: string;
+  tokenId: string;
+  contract: string;
+};
 
 export const GET = async (req: NextRequest) => {
   const s_params = req.nextUrl.searchParams;
@@ -51,7 +60,35 @@ export const GET = async (req: NextRequest) => {
         image: imageURL,
       };
     })
-    .filter((nft) => nft.image);
+    .filter((nft) => nft.image) as FrameNFT[];
+
+  // Filter out images that take time to respons
+  const nft_images_filtered = await Promise.all(
+    nft_images.map(
+      (nft) =>
+        new Promise<FrameNFT>(async (resolve) => {
+          const img_req = https.get(nft.image, (res) => {
+            if (res.statusCode === 200) {
+              resolve(nft);
+            } else {
+              resolve({ ...nft, image: testFallbackImage });
+            }
+          });
+
+          img_req.on("error", (e) => {
+            console.error(e);
+            resolve({ ...nft, image: testFallbackImage });
+          });
+
+          img_req.setTimeout(1000, () => {
+            img_req.abort();
+            resolve({ ...nft, image: testFallbackImage });
+          });
+        })
+    )
+  );
+
+  console.log({ nft_images_filtered });
 
   return new ImageResponse(
     (
@@ -80,7 +117,7 @@ export const GET = async (req: NextRequest) => {
             gap: image_grid_gap,
           }}
         >
-          {nft_images.map(({ image, tokenId, contract }) => {
+          {nft_images_filtered.map(({ image, tokenId, contract }) => {
             const key = tokenId + "_" + contract;
             return (
               <div
