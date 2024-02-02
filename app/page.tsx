@@ -8,7 +8,7 @@ const frameMetadata = getFrameMetadata({
       label: "Show",
     },
   ],
-  image: `${appURL}/api/preview`,
+  image: `${appURL}/api/image/preview`,
   post_url: `${appURL}/api/frame`,
 });
 
