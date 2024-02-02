@@ -70,6 +70,7 @@ export const GET = async (req: NextRequest) => {
           }}
         >
           {content.map((nft) => {
+            const imageURL = nft.image.thumbnailUrl ?? nft.image.originalUrl;
             return (
               <div
                 style={{
@@ -77,10 +78,12 @@ export const GET = async (req: NextRequest) => {
                 }}
                 key={nft.tokenId + " " + nft.contract.address}
               >
-                <img
-                  src={nft.image.thumbnailUrl}
-                  style={{ width: imageWidth, aspectRatio: 1 }}
-                />
+                {imageURL && (
+                  <img
+                    src={imageURL}
+                    style={{ width: imageWidth, aspectRatio: 1 }}
+                  />
+                )}
               </div>
             );
           })}
