@@ -15,6 +15,16 @@ const frameMetadata = getFrameMetadata({
 export const metadata: Metadata = {
   title: "SHOW TBA FRAME",
   description: "Frame that shows TBA assets",
+  openGraph: {
+    images: [
+      {
+        url: `${appURL}/api/image/preview`,
+        width: 1200,
+        height: 630,
+        alt: "TBA Frame",
+      },
+    ],
+  },
   other: {
     ...frameMetadata,
   },
