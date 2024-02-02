@@ -6,11 +6,6 @@ import {
 } from "@coinbase/onchainkit";
 import { NextRequest, NextResponse } from "next/server";
 
-enum RequestType {
-  PREVIEW,
-  SHOW,
-}
-
 async function getResponse(
   req: NextRequest,
   contentURL: string
@@ -24,6 +19,7 @@ async function getResponse(
       ],
       image: contentURL,
       post_url: `${appURL}/api/frame?${contentURL.split("?")[1]}`,
+      refresh_period: 30,
     })
   );
 }
