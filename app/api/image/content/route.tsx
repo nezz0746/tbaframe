@@ -36,11 +36,10 @@ export const GET = async (req: NextRequest) => {
   const content = await getTBAContent(params, version === 2);
 
   const padding = 20;
-  const containerWidth = width - padding * 2;
+  const header_content_gap = 20;
+  const containerWidth = width - padding * 2 - header_content_gap;
   const headerWidth = containerWidth * 0.3;
   const contentWidth = containerWidth - headerWidth;
-
-  const header_content_gap = 20;
 
   const image_grid_gap = 10;
   const images_per_row = 4;
@@ -50,8 +49,7 @@ export const GET = async (req: NextRequest) => {
       (images_per_row - 1) * image_grid_gap -
       header_content_gap) /
       images_per_row -
-    10;
-
+    5;
   const nft_images = content
     .map((nft) => {
       const imageURL = nft.image.thumbnailUrl ?? nft.image.originalUrl;
@@ -100,6 +98,8 @@ export const GET = async (req: NextRequest) => {
           gap: header_content_gap,
           width: "100%",
           height: "100%",
+          backgroundColor: "white",
+          border: "green 1px solid",
         }}
       >
         <div
@@ -144,9 +144,10 @@ export const GET = async (req: NextRequest) => {
               flexDirection: "row",
               flexWrap: "wrap",
               flexGrow: 1,
-              justifyContent: "center",
+              justifyContent: "flex-start",
               alignItems: "center",
-              padding: 10,
+              paddingLeft: 20,
+              paddingTop: 10,
               width: contentWidth,
               gap: image_grid_gap,
               backgroundColor: "white",
