@@ -12,3 +12,14 @@ export const appURL = (() => {
 
   return `${protocol}://${domain}`;
 })();
+
+export const alchemy_key = process.env.ALCHEMY_KEY ?? "";
+
+export const aspectRatio = 1.91;
+
+const WIDTH = 1500;
+
+export const dimensions = {
+  width: WIDTH,
+  height: WIDTH / aspectRatio,
+};

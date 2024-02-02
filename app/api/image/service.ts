@@ -1,47 +1,48 @@
-import { init, fetchQuery } from "@airstack/node";
+import { init } from "@airstack/node";
+import { getTBAClient } from "./utils";
+import { TokenParams } from "./types";
+import { Address } from "viem";
+import { alchemy_key } from "@/config";
+import { Alchemy, Network } from "alchemy-sdk";
 
-type TokenParams = {
-  chainId: string;
-  tokenId: string;
-  tokenContract: string;
+export const getAlchemyNFT = (chainId: number) => {
+  const chainIdToNetwork: Record<number, Network> = {
+    1: Network.ETH_MAINNET,
+    8453: Network.BASE_MAINNET,
+  };
+  return new Alchemy({
+    apiKey: alchemy_key,
+    network: chainIdToNetwork[chainId],
+  }).nft;
 };
 
 init(process.env.AIRSTACK_KEY ?? "");
 
 export const getTokenImage = async (params: TokenParams) => {
-  const { data, error } = await fetchQuery(
-    `
-  query TokenImageQuery($network: TokenBlockchain!, $tokenId: String!, $tokenContract: Address!) {
-    Ethereum: TokenBalances(
-      input: {filter: {tokenAddress: {_eq: $tokenContract}, tokenId: {_eq: $tokenId}}, blockchain: $network}
-    ) {
-      TokenBalance {
-        tokenNfts {
-          tokenURI
-          metaData {
-            image
-          }
-        }
-      }
-    }
-  }`,
-    {
-      network: (() => {
-        switch (params.chainId) {
-          case "1":
-            return "ethereum";
-          case "8453":
-            return "base";
-          case "7777777":
-            return "zora";
-          default:
-            return "ethereum";
-        }
-      })(),
-      tokenId: params.tokenId,
-      tokenContract: params.tokenContract,
-    }
+  const nft = getAlchemyNFT(parseInt(params.chainId));
+  const { image } = await nft.getNftMetadata(
+    params.tokenContract,
+    params.tokenId
   );
+  return image.cachedUrl;
+};
 
-  return data.Ethereum.TokenBalance[0].tokenNfts.metaData.image;
+export const getTBANfts = async (account: string, chainId: string) => {
+  const nfts = await getAlchemyNFT(parseInt(chainId)).getNftsForOwner(account);
+
+  return nfts;
+};
+
+export const getTBAContent = async (params: TokenParams, v2?: boolean) => {
+  const account = getTBAClient(params?.chainId, v2).getAccount({
+    tokenContract: params.tokenContract as Address,
+    tokenId: params.tokenId,
+  });
+
+  console.log(account);
+
+  const content = await getTBANfts(account, params.chainId);
+
+  console.log(content.ownedNfts.length);
+  return content.ownedNfts;
 };

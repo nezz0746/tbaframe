@@ -1,19 +1,26 @@
 import { NextRequest } from "next/server";
 import { ImageResponse } from "@vercel/og";
 import { getTokenImage } from "../service";
-
-const aspectRatio = 1.91;
-
-const width = 1500;
-
-const height = width / aspectRatio;
+import { dimensions } from "@/config";
+import { WronParams } from "../components";
 
 export const GET = async (req: NextRequest) => {
-  const params = {
-    tokenContract: "0x26727Ed4f5BA61d3772d1575Bca011Ae3aEF5d36",
-    tokenId: "195",
-    chainId: "1",
-  };
+  const s_params = req.nextUrl.searchParams;
+  const tokenContract = s_params.get("tokenContract");
+  const tokenId = s_params.get("tokenId");
+  const chainId = s_params.get("chainId");
+  // no need for version here
+
+  const { width, height } = dimensions;
+
+  if (!tokenContract || !tokenId || !chainId) {
+    return new ImageResponse(<WronParams />, {
+      width,
+      height,
+    });
+  }
+
+  const params = { tokenContract, tokenId, chainId };
 
   const image = await getTokenImage(params);
 
