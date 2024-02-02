@@ -20,15 +20,17 @@ init(process.env.AIRSTACK_KEY ?? "");
 
 export const getTokenImage = async (params: TokenParams) => {
   const nft = getAlchemyNFT(parseInt(params.chainId));
-  const { image } = await nft.getNftMetadata(
+  const { image, name } = await nft.getNftMetadata(
     params.tokenContract,
     params.tokenId
   );
-  return image.cachedUrl;
+  return { image: image.cachedUrl, name };
 };
 
 export const getTBANfts = async (account: string, chainId: string) => {
-  const nfts = await getAlchemyNFT(parseInt(chainId)).getNftsForOwner(account);
+  const nfts = await getAlchemyNFT(parseInt(chainId)).getNftsForOwner(account, {
+    pageSize: 12,
+  });
 
   return nfts;
 };

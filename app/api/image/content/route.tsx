@@ -31,19 +31,19 @@ export const GET = async (req: NextRequest) => {
 
   const params = { tokenContract, tokenId, chainId, version };
 
-  const image = await getTokenImage(params);
+  const { image, name } = await getTokenImage(params);
 
   const content = await getTBAContent(params, version === 2);
 
   const padding = 20;
   const containerWidth = width - padding * 2;
-  const headerWidth = containerWidth * 0.25;
+  const headerWidth = containerWidth * 0.3;
   const contentWidth = containerWidth - headerWidth;
 
   const header_content_gap = 20;
 
   const image_grid_gap = 10;
-  const images_per_row = 6;
+  const images_per_row = 4;
 
   const imageWidth =
     (contentWidth -
@@ -102,8 +102,16 @@ export const GET = async (req: NextRequest) => {
           gap: header_content_gap,
         }}
       >
-        <div style={{ display: "flex", width: headerWidth }}>
+        <div
+          style={{
+            display: "flex",
+            width: headerWidth,
+            flexDirection: "column",
+            position: "relative",
+          }}
+        >
           <img src={image} style={{ width: "100%", aspectRatio: 1 }} />
+          <p style={{ fontSize: 50, fontWeight: "bold" }}>{name}</p>
         </div>
         <div
           style={{
@@ -128,7 +136,10 @@ export const GET = async (req: NextRequest) => {
               >
                 <img
                   src={image}
-                  style={{ width: imageWidth, aspectRatio: 1 }}
+                  style={{
+                    width: imageWidth,
+                    aspectRatio: 1,
+                  }}
                 />
               </div>
             );

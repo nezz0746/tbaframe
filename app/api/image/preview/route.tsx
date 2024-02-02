@@ -22,7 +22,7 @@ export const GET = async (req: NextRequest) => {
 
   const params = { tokenContract, tokenId, chainId };
 
-  const image = await getTokenImage(params);
+  const { image } = await getTokenImage(params);
 
   const imageSize = 0.8 * height;
 
