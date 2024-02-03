@@ -24,6 +24,8 @@ Pass the following properties in the url's search parameters
 |Network|ChainId|
 |---|---|
 |Mainnet|1|
+|Polygon|137|
+|Goerli|5|
 |Base Mainnet|8453|
 
 ## Deployment

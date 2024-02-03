@@ -1,17 +1,8 @@
 import { NextRequest } from "next/server";
 import { ImageResponse } from "@vercel/og";
 import { getTBAContent, getTokenImage } from "../service";
-import { appURL, dimensions } from "@/config";
-import https from "https";
+import { dimensions } from "@/config";
 import { WronParams } from "../components";
-
-const testFallbackImage = appURL + "/placeholder.png";
-
-type FrameNFT = {
-  image: string;
-  tokenId: string;
-  contract: string;
-};
 
 export const GET = async (req: NextRequest) => {
   const s_params = req.nextUrl.searchParams;
@@ -33,7 +24,7 @@ export const GET = async (req: NextRequest) => {
 
   const { image, name } = await getTokenImage(params);
 
-  const content = await getTBAContent(params, version === 2);
+  const nft_images = await getTBAContent(params, version === 2);
 
   const padding = 20;
   const header_content_gap = 20;
@@ -50,44 +41,6 @@ export const GET = async (req: NextRequest) => {
       header_content_gap) /
       images_per_row -
     5;
-  const nft_images = content
-    .map((nft) => {
-      const imageURL = nft.image.thumbnailUrl ?? nft.image.originalUrl;
-      return {
-        tokenId: nft.tokenId,
-        contract: nft.contract.address,
-        image: imageURL,
-      };
-    })
-    .filter((nft) => nft.image) as FrameNFT[];
-
-  // Filter out images that take time to respons
-  const nft_images_filtered = await Promise.all(
-    nft_images.map(
-      (nft) =>
-        new Promise<FrameNFT>(async (resolve) => {
-          const img_req = https.get(nft.image, (res) => {
-            if (res.statusCode === 200) {
-              resolve(nft);
-            } else {
-              resolve({ ...nft, image: testFallbackImage });
-            }
-          });
-
-          img_req.on("error", (e) => {
-            console.error(e);
-            resolve({ ...nft, image: testFallbackImage });
-          });
-
-          img_req.setTimeout(1000, () => {
-            img_req.abort();
-            resolve({ ...nft, image: testFallbackImage });
-          });
-        })
-    )
-  );
-
-  console.log({ nft_images_filtered });
 
   return new ImageResponse(
     (
@@ -155,7 +108,7 @@ export const GET = async (req: NextRequest) => {
               boxShadow: "0 0 30px 0 rgba(0, 0, 0, 0.4)",
             }}
           >
-            {nft_images_filtered.map(({ image, tokenId, contract }) => {
+            {nft_images.map(({ image, tokenId, contract }) => {
               const key = tokenId + "_" + contract;
               return (
                 <div
