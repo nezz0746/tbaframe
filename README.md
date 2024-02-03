@@ -1,8 +1,8 @@
 # 🖼️ TBA-FRAME
 
 <div style="display:flex;flex-direction:row;gap:20px;">
-  <img src="screen-1.png">
-  <img src="screen-2.png">
+  <img src="screen-1.png" style="width:49%">
+  <img src="screen-2.png" style="width:49%">
 </div>
 
 <br/>
