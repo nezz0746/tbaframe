@@ -1,12 +1,14 @@
 import { alchemy_key } from "@/config";
 import { Address, Chain, createPublicClient, http } from "viem";
-import { base, mainnet } from "viem/chains";
+import { base, goerli, mainnet, polygon } from "viem/chains";
 import { TokenboundClient } from "@tokenbound/sdk";
 import { Alchemy, Network } from "alchemy-sdk";
 
 const chainIdToNetwork: Record<number, Network> = {
   1: Network.ETH_MAINNET,
+  5: Network.ETH_GOERLI,
   8453: Network.BASE_MAINNET,
+  137: Network.MATIC_MAINNET,
 };
 
 const getRPCUrl = (chainId: number) => {
@@ -15,6 +17,10 @@ const getRPCUrl = (chainId: number) => {
       return `https://eth-mainnet.g.alchemy.com/v2/${alchemy_key}`;
     case 8453:
       return `https://base-mainnet.g.alchemy.com/v2/${alchemy_key}`;
+    case 137:
+      return `https://polygon-mainnet.g.alchemy.com/v2/${alchemy_key}`;
+    case 5:
+      return `https://eth-goerli.g.alchemy.com/v2/${alchemy_key}`;
     default:
       return `https://eth-mainnet.g.alchemy.com/v2/${alchemy_key}`;
   }
@@ -26,6 +32,10 @@ const getChain = (chainId: number): Chain => {
       return mainnet;
     case 8453:
       return base;
+    case 137:
+      return polygon;
+    case 5:
+      return goerli;
     default:
       return mainnet;
   }
