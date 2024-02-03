@@ -17,7 +17,7 @@ export const alchemy_key = process.env.ALCHEMY_KEY ?? "";
 
 export const aspectRatio = 1.91;
 
-const WIDTH = 1500;
+const WIDTH = 500;
 
 export const dimensions = {
   width: WIDTH,
