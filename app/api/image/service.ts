@@ -6,6 +6,11 @@ import https from "https";
 
 const testFallbackImage = appURL + "/placeholder.png";
 
+/**
+ * Retrieves the token image and name from the specified token contract and token ID.
+ * @param params - The parameters for retrieving the token image.
+ * @returns An object containing the token image URL and name.
+ */
 export const getTokenImage = async (params: TokenParams) => {
   const nft = getAlchemyNFT(parseInt(params.chainId));
   const { image, name } = await nft.getNftMetadata(
@@ -15,6 +20,12 @@ export const getTokenImage = async (params: TokenParams) => {
   return { image: image.cachedUrl, name };
 };
 
+/**
+ * Retrieves TBA content for a given set of parameters.
+ * @param params - The token parameters.
+ * @param v2 - Optional parameter indicating whether to use v2 implementation.
+ * @returns A promise that resolves to an array of FrameNFT objects.
+ */
 export const getTBAContent = async (params: TokenParams, v2?: boolean) => {
   const account = getTBAClient(params?.chainId, v2).getAccount({
     tokenContract: params.tokenContract as Address,
@@ -61,7 +72,7 @@ export const getTBAContent = async (params: TokenParams, v2?: boolean) => {
           });
 
           img_req.setTimeout(500, () => {
-            img_req.abort();
+            img_req.destroy();
             resolve({ ...nft, image: testFallbackImage });
           });
         })
