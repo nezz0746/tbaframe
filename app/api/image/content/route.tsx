@@ -106,10 +106,7 @@ export const GET = async (req: NextRequest) => {
               gap: image_grid_gap,
               width: contentWidth,
               height: contentHeight,
-              // Make gradient background color from black to white
               background: "linear-gradient(to bottom, black, white)",
-
-              // backgroundColor:
               marginTop: -14,
               boxShadow: "0 0 30px 0 rgba(0, 0, 0, 0.4)",
             }}
