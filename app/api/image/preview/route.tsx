@@ -1,7 +1,7 @@
 import { NextRequest } from "next/server";
 import { ImageResponse } from "@vercel/og";
 import { getTokenImage } from "../service";
-import { dimensions } from "@/config";
+import { dimensions, previewTitleFontSize } from "@/config";
 import { WronParams } from "../components";
 
 export const GET = async (req: NextRequest) => {
@@ -35,6 +35,7 @@ export const GET = async (req: NextRequest) => {
           justifyContent: "center",
           alignItems: "center",
           width: "100%",
+          gap: 0,
           backgroundColor: "white",
           height: "100%",
         }}
@@ -49,7 +50,15 @@ export const GET = async (req: NextRequest) => {
             backgroundColor: "black",
           }}
         ></div>
-        <p style={{ fontSize: 50, color: "white" }}>{name}</p>
+        <p
+          style={{
+            fontSize: previewTitleFontSize,
+            color: "white",
+            marginBottom: 5,
+          }}
+        >
+          {name}
+        </p>
         <img
           src={image}
           style={{

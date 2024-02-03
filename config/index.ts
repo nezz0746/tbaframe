@@ -23,3 +23,6 @@ export const dimensions = {
   width: WIDTH,
   height: WIDTH / aspectRatio,
 };
+
+export const previewTitleFontSize = dimensions.height * 0.1;
+export const contentTitleFontSize = dimensions.height * 0.05;

@@ -1,7 +1,7 @@
 import { NextRequest } from "next/server";
 import { ImageResponse } from "@vercel/og";
 import { getTBAContent, getTokenImage } from "../service";
-import { dimensions } from "@/config";
+import { contentTitleFontSize, dimensions } from "@/config";
 import { WronParams } from "../components";
 
 export const GET = async (req: NextRequest) => {
@@ -27,20 +27,18 @@ export const GET = async (req: NextRequest) => {
   const nft_images = await getTBAContent(params, version === 2);
 
   const padding = 20;
-  const header_content_gap = 20;
+  const header_content_gap = 10;
   const containerWidth = width - padding * 2 - header_content_gap;
-  const headerWidth = containerWidth * 0.3;
+  const headerWidth = containerWidth * 0.25;
   const contentWidth = containerWidth - headerWidth;
 
-  const image_grid_gap = 10;
+  const image_grid_gap = 4;
   const images_per_row = 4;
 
-  const imageWidth =
-    (contentWidth -
-      (images_per_row - 1) * image_grid_gap -
-      header_content_gap) /
-      images_per_row -
-    5;
+  const accumulated_gap = image_grid_gap * (images_per_row - 1);
+  const imageWidth = (contentWidth - accumulated_gap) / images_per_row;
+
+  const contentHeight = 3 * imageWidth + 2 * image_grid_gap;
 
   return new ImageResponse(
     (
@@ -60,7 +58,7 @@ export const GET = async (req: NextRequest) => {
             position: "absolute",
             top: 0,
             width: "100%",
-            height: "50%",
+            height: "65%",
             backgroundColor: "black",
           }}
         ></div>
@@ -90,21 +88,29 @@ export const GET = async (req: NextRequest) => {
                 boxShadow: "0 0 30px 0 rgba(0, 0, 0, 0.4)",
               }}
             />
-            <p style={{ fontSize: 50, fontWeight: "bold" }}>{name}</p>
+            <p
+              style={{
+                fontSize: contentTitleFontSize,
+                marginTop: 5,
+                color: "white",
+              }}
+            >
+              {name}
+            </p>
           </div>
           <div
             style={{
               display: "flex",
               flexDirection: "row",
               flexWrap: "wrap",
-              flexGrow: 1,
-              justifyContent: "flex-start",
-              alignItems: "center",
-              paddingLeft: 20,
-              paddingTop: 10,
-              width: contentWidth,
               gap: image_grid_gap,
-              backgroundColor: "white",
+              width: contentWidth,
+              height: contentHeight,
+              // Make gradient background color from black to white
+              background: "linear-gradient(to bottom, black, white)",
+
+              // backgroundColor:
+              marginTop: -14,
               boxShadow: "0 0 30px 0 rgba(0, 0, 0, 0.4)",
             }}
           >
@@ -136,6 +142,7 @@ export const GET = async (req: NextRequest) => {
     {
       width,
       height,
+      // debug: true,
     }
   );
 };
