@@ -40,6 +40,8 @@ export async function POST(req: NextRequest): Promise<Response> {
     return new NextResponse(message, { status: 400 });
   } else {
     if (!message) throw new Error("Message is undefined");
+    // Check https://github.com/coinbase/onchainkit to see the available message data structure
+    // you can use to customize the response
     const { button } = message;
 
     return getResponse(
