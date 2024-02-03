@@ -79,6 +79,7 @@ export const GET = async (req: NextRequest) => {
               width: headerWidth,
               flexDirection: "column",
               position: "relative",
+              whiteSpace: "wrap",
             }}
           >
             <img
