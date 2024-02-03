@@ -1,4 +1,3 @@
-import { init } from "@airstack/node";
 import { getTBAClient } from "./utils";
 import { TokenParams } from "./types";
 import { Address } from "viem";
@@ -15,8 +14,6 @@ export const getAlchemyNFT = (chainId: number) => {
     network: chainIdToNetwork[chainId],
   }).nft;
 };
-
-init(process.env.AIRSTACK_KEY ?? "");
 
 export const getTokenImage = async (params: TokenParams) => {
   const nft = getAlchemyNFT(parseInt(params.chainId));
