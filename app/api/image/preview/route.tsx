@@ -46,8 +46,8 @@ export const GET = async (req: NextRequest) => {
             position: "absolute",
             top: 0,
             width: "100%",
-            height: "50%",
-            backgroundColor: "black",
+            height: "70%",
+            background: "linear-gradient(to bottom, #7C65C1, white)",
           }}
         ></div>
         <p
@@ -55,6 +55,7 @@ export const GET = async (req: NextRequest) => {
             fontSize: previewTitleFontSize,
             color: "white",
             marginBottom: 5,
+            marginTop: 0,
           }}
         >
           {name}
@@ -64,6 +65,7 @@ export const GET = async (req: NextRequest) => {
           style={{
             width: imageSize,
             height: imageSize,
+            borderRadius: 10,
             boxShadow: "0 0 30px 0 rgba(0, 0, 0, 0.4)",
           }}
         />

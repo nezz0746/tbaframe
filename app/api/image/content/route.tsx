@@ -31,12 +31,15 @@ export const GET = async (req: NextRequest) => {
   const containerWidth = width - padding * 2 - header_content_gap;
   const headerWidth = containerWidth * 0.25;
   const contentWidth = containerWidth - headerWidth;
+  const contentPadding = 5;
 
   const image_grid_gap = 4;
   const images_per_row = 4;
 
   const accumulated_gap = image_grid_gap * (images_per_row - 1);
-  const imageWidth = (contentWidth - accumulated_gap) / images_per_row;
+  const accumulated_padding = contentPadding * 2;
+  const imageWidth =
+    (contentWidth - accumulated_gap - accumulated_padding) / images_per_row;
 
   const contentHeight = 3 * imageWidth + 2 * image_grid_gap;
 
@@ -59,7 +62,7 @@ export const GET = async (req: NextRequest) => {
             top: 0,
             width: "100%",
             height: "65%",
-            backgroundColor: "black",
+            background: "linear-gradient(to bottom, #7C65C1, white)",
           }}
         ></div>
         <div
@@ -76,6 +79,7 @@ export const GET = async (req: NextRequest) => {
               width: headerWidth,
               flexDirection: "column",
               position: "relative",
+              whiteSpace: "wrap",
             }}
           >
             <img
@@ -85,6 +89,7 @@ export const GET = async (req: NextRequest) => {
               style={{
                 width: "100%",
                 aspectRatio: 1,
+                borderRadius: 10,
                 boxShadow: "0 0 30px 0 rgba(0, 0, 0, 0.4)",
               }}
             />
@@ -92,7 +97,7 @@ export const GET = async (req: NextRequest) => {
               style={{
                 fontSize: contentTitleFontSize,
                 marginTop: 5,
-                color: "white",
+                color: "black",
               }}
             >
               {name}
@@ -106,9 +111,9 @@ export const GET = async (req: NextRequest) => {
               gap: image_grid_gap,
               width: contentWidth,
               height: contentHeight,
-              background: "linear-gradient(to bottom, black, white)",
+              padding: contentPadding,
+              backgroundColor: "white",
               marginTop: -14,
-              boxShadow: "0 0 30px 0 rgba(0, 0, 0, 0.4)",
             }}
           >
             {nft_images.map(({ image, tokenId, contract }) => {
