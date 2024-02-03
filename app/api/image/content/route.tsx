@@ -1,11 +1,11 @@
 import { NextRequest } from "next/server";
 import { ImageResponse } from "@vercel/og";
 import { getTBAContent, getTokenImage } from "../service";
-import { dimensions } from "@/config";
+import { appURL, dimensions } from "@/config";
 import https from "https";
 import { WronParams } from "../components";
 
-const testFallbackImage = "https://placehold.co/200x200";
+const testFallbackImage = appURL + "/placeholder.png";
 
 type FrameNFT = {
   image: string;
