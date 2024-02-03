@@ -1,22 +1,10 @@
-import { getTBAClient } from "./utils";
+import { getAlchemyNFT, getTBAClient } from "./utils";
 import { FrameNFT, TokenParams } from "./types";
 import { Address } from "viem";
-import { alchemy_key, appURL } from "@/config";
-import { Alchemy, Network } from "alchemy-sdk";
+import { appURL } from "@/config";
 import https from "https";
 
 const testFallbackImage = appURL + "/placeholder.png";
-
-export const getAlchemyNFT = (chainId: number) => {
-  const chainIdToNetwork: Record<number, Network> = {
-    1: Network.ETH_MAINNET,
-    8453: Network.BASE_MAINNET,
-  };
-  return new Alchemy({
-    apiKey: alchemy_key,
-    network: chainIdToNetwork[chainId],
-  }).nft;
-};
 
 export const getTokenImage = async (params: TokenParams) => {
   const nft = getAlchemyNFT(parseInt(params.chainId));
@@ -27,14 +15,6 @@ export const getTokenImage = async (params: TokenParams) => {
   return { image: image.cachedUrl, name };
 };
 
-export const getTBANfts = async (account: string, chainId: string) => {
-  const nfts = await getAlchemyNFT(parseInt(chainId)).getNftsForOwner(account, {
-    pageSize: 12,
-  });
-
-  return nfts;
-};
-
 export const getTBAContent = async (params: TokenParams, v2?: boolean) => {
   const account = getTBAClient(params?.chainId, v2).getAccount({
     tokenContract: params.tokenContract as Address,
@@ -43,7 +23,12 @@ export const getTBAContent = async (params: TokenParams, v2?: boolean) => {
 
   console.log(account);
 
-  const content = await getTBANfts(account, params.chainId);
+  const content = await getAlchemyNFT(parseInt(params.chainId)).getNftsForOwner(
+    account,
+    {
+      pageSize: 12,
+    }
+  );
 
   console.log(content.ownedNfts.map((nft) => [nft.name, nft.image]));
 
