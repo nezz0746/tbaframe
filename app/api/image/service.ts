@@ -1,8 +1,11 @@
 import { getTBAClient } from "./utils";
-import { TokenParams } from "./types";
+import { FrameNFT, TokenParams } from "./types";
 import { Address } from "viem";
-import { alchemy_key } from "@/config";
+import { alchemy_key, appURL } from "@/config";
 import { Alchemy, Network } from "alchemy-sdk";
+import https from "https";
+
+const testFallbackImage = appURL + "/placeholder.png";
 
 export const getAlchemyNFT = (chainId: number) => {
   const chainIdToNetwork: Record<number, Network> = {
@@ -44,5 +47,39 @@ export const getTBAContent = async (params: TokenParams, v2?: boolean) => {
 
   console.log(content.ownedNfts.map((nft) => [nft.name, nft.image]));
 
-  return content.ownedNfts;
+  const frame_nfts = content.ownedNfts
+    .map((nft) => {
+      const imageURL = nft.image.thumbnailUrl ?? nft.image.originalUrl;
+      return {
+        tokenId: nft.tokenId,
+        contract: nft.contract.address,
+        image: imageURL,
+      };
+    })
+    .filter((nft) => nft.image) as FrameNFT[];
+
+  return Promise.all(
+    frame_nfts.map(
+      (nft) =>
+        new Promise<FrameNFT>(async (resolve) => {
+          const img_req = https.get(nft.image, (res) => {
+            if (res.statusCode === 200) {
+              resolve(nft);
+            } else {
+              resolve({ ...nft, image: testFallbackImage });
+            }
+          });
+
+          img_req.on("error", (e) => {
+            console.error(e);
+            resolve({ ...nft, image: testFallbackImage });
+          });
+
+          img_req.setTimeout(500, () => {
+            img_req.abort();
+            resolve({ ...nft, image: testFallbackImage });
+          });
+        })
+    )
+  );
 };
